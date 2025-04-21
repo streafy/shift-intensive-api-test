@@ -36,3 +36,19 @@ def otp_code(phone_number):
 @pytest.fixture(scope="function")
 def phone_number():
     return "89990009999"
+
+
+@pytest.fixture(scope="function")
+def auth_token(phone_number, otp_code):
+    if otp_code is None:
+        return None
+
+    response = requests.post(configuration.BASE_URL + endpoints.SIGNIN, json={
+        "phone": phone_number,
+        "code": int(otp_code)
+    })
+
+    if response.status_code != 201:
+        return None
+
+    return response.json()["token"]
