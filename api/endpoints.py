@@ -1,3 +1,5 @@
+GET_OTPS_PAGE = "/otps"
+
 CREATE_OTP_CODE = "/auth/otp"
 
 SIGNIN = "/users/signin"
