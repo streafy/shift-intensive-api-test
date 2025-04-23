@@ -52,3 +52,58 @@ def auth_token(phone_number, otp_code):
         return None
 
     return response.json()["token"]
+
+
+@pytest.fixture(scope="function")
+def point():
+    return {
+        "id": "1",
+        "name": "name",
+        "latitude": 50,
+        "longitude": 50
+    }
+
+
+@pytest.fixture(scope="function")
+def address():
+    return {
+        "street": "street",
+        "house": "house",
+        "apartment": "apartment",
+        "comment": "comment"
+    }
+
+
+@pytest.fixture(scope="function")
+def person():
+    return {
+        "firstname": "firstname",
+        "lastname": "lastname",
+        "middlename": "middlename",
+        "phone": "89990009999"
+    }
+
+
+@pytest.fixture(scope="function")
+def order_id(point, address, person):
+    response = requests.post(configuration.BASE_URL + endpoints.CREATE_DELIVERY_ORDER, json={
+        "senderPoint": point,
+        "senderAddress": address,
+        "sender": person,
+        "receiverPoint": point,
+        "receiverAddress": address,
+        "receiver": person,
+        "payer": "SENDER",
+        "option": {
+            "id": "1",
+            "price": 10000,
+            "days": 2,
+            "name": "name",
+            "type": "DEFAULT"
+        }
+    })
+
+    if response.status_code != 201:
+        return None
+
+    return response.json()["order"]["_id"]
